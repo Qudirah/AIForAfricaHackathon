@@ -5,6 +5,4 @@ openai==1.13.3
 opencv-python==4.9.0.80
 pytesseract==0.3.10
 pytest==7.4.0
-python==3.10
-python-lsp-black==1.2.1
 streamlit==1.32.0
