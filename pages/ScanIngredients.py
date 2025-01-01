@@ -13,14 +13,13 @@ def format_picture(picture):
     text = pytesseract.image_to_string(picture)
     return text
 
-def get_completions_from_messages(user_input, model="gpt-3.5-turbo"):
-    messages = [{"role":"system","content":"""You are a funny skincare expert. \ When a user gives you bunch of ingredients, you will tell them the skin issues the ingredients will fix simply and precisely and insert a joke to keep it lively.\ 
-             Keep it to the top two or three possible issues they are experiencing and top two fixes the ingredients will do for them. Remember, the skin is a sensitive organ so you want to give the possible best answer.\ Incase you notice toxic ingredients that can cause harm, you will point that out.\When a user tells you about their skin issues, you tell them three main ingredients to look out for in products and recommend a simple skincare routine but only do this if they tell you what skin problem they are going through or explicitly ask for advice. Remember to keep it lively with jokes.\Incase the user have no issues with their skin, Compliment them and remind them you can always evaluate the ingredients in their products."""},
+def get_completions_from_messages(user_input, model="gpt-4"):
+    messages = [{"role":"system","content":"""You are a sassy skincare expert. \ When a user gives you bunch of ingredients, you will tell them the skin issues the ingredients will fix simply and precisely and insert a joke to keep it lively.\ 
+             Keep it to the top two or three possible issues they are experiencing and top two fixes the ingredients will do for them. Remember, the skin is a sensitive organ so you want to give the possible best answer.\ Incase you notice toxic ingredients that can cause harm, you will point that out."""},
             {"role":"user","content":"Water, Butylene Glycol, Kojic Acid, Citric Acid"},
-           {"role":"assistant","content":"These ingredients will help with even skin tone and skin brightening."},
-#            {"role":"user","content":"Dimethiccesy, Cety! AlcoRol, Glycerin, Parki (Shea) Butter, Tiglycende, Aloe BarbadensisMais (Apple) Fruit Extract, Anthemis,Flosmarinus OfficinalisExtract,Oryze Seti 1 Extract, Cateanyi Ethyihexanoate,Geiearyl PhospheaiySitycery| Stearate, Carbomer, BHT,Fragranc’,, Kanitian Gum, Tetrasodium Glutamate Diacetate. 'Phenoxyetharel, Ethyihexyiglycerin, Caprylyl Glycol, HexyleneGlycol, Cironellol, Limonene, Amyl Cinnamal, Geraniol, Hexy!Cinnvarnal, Hydroxycitronellal, Linalool, Sodium Hydroxide,Hydroquionine,Phthalates,Toluene"}
-           {"role":"user","content":"I suffer from hyperpigmentation and dull skin. I don't know what to do"},
-           {"role":"assistant","content":"To tackle hyperpigmentation and dull skin, look for products containing Vitamin C, Niacinamide, and Retinol. A good routine for you would be to cleanse every morning, use a niacinamide infused toner after, follow by a vitamin c or retinol based serum and of course, never forget a sunscreen!"},
+            {"role":"assistant","content":"These ingredients will help with even skin tone and skin brightening and so is minding your business. Drink water for clear skin and mind your business."},
+            {"role":"user","content":"Dimethiccesy, Cety! AlcoRol, Glycerin, Parki (Shea) Butter, Tiglycende, Aloe BarbadensisMais (Apple) Fruit Extract, Anthemis,Flosmarinus OfficinalisExtract,Oryze Seti 1 Extract, Cateanyi Ethyihexanoate,Geiearyl PhospheaiySitycery| Stearate, Carbomer, BHT,Fragranc’,, Kanitian Gum, Tetrasodium Glutamate Diacetate. 'Phenoxyetharel, Ethyihexyiglycerin, Caprylyl Glycol, HexyleneGlycol, Cironellol, Limonene, Amyl Cinnamal, Geraniol, Hexy!Cinnvarnal, Hydroxycitronellal, Linalool, Sodium Hydroxide,Hydroquionine,Phthalates,Toluene"},
+            {"role":"assistant","content":"These are lovely ingredients but be wary of Toluene and Hydroquinone. They are toxic products just like your ex!"},
             {"role":"user","content":user_input}]
     client = OpenAI()
     chat_completion = client.chat.completions.create(
@@ -44,30 +43,30 @@ if upload_option == "Upload a Picture":
     if picture is not None:
         text = format_picture(picture)
 
-        if len(text.lower().replace('\n', ' ')) > 10:
+        if len(text.lower().replace('\n', ' ')) > 0:
             text = st.text_area(label='Please edit to be sure we have the right ingredients.', value=text)
             submit = st.button('Submit')
 
             if submit:
                 text = text.lower().replace('\n', ' ')
-                st.write(get_completions_from_messages(user_input=text))
+                st.warning(get_completions_from_messages(user_input=text))
         else:
             st.warning('Ingredients not detected. Please try again.')
 
-elif upload_option == "Take a Picture":
+elif upload_option == "Take a Picture to scan":
     picture = st.camera_input("Take the picture of ingredients section on the product ")
 
     if picture is not None:
         text = format_picture(picture)
         text = text.lower().replace('\n', ' ')
 
-        if len(text.lower().replace('\n', ' ')) > 10:
+        if len(text.lower().replace('\n', ' ')) > 0:
             text = st.text_area(label='Please edit to be sure we have the right ingredients.', value=text)
             submit = st.button('Submit')
 
             if submit:
                 text = text.lower().replace('\n', ' ')
-                st.write(get_completions_from_messages(user_input=text))
+                st.warning(get_completions_from_messages(user_input=text))
         else:
             st.warning('Ingredients not detected. Please try again.')
 else:
@@ -76,4 +75,4 @@ else:
     submit = st.button('Submit')
     if submit:
         text = text.lower().replace('\n', ' ')
-        st.write(get_completions_from_messages(user_input=text))
+        st.warning(get_completions_from_messages(user_input=text))
